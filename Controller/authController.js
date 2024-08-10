@@ -69,12 +69,30 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
 
 
-exports.protect = catchAsync(async (req, res, next) => {
+exports.isAuth = catchAsync(async (req, res, next) => {
     let token
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1]
     }
+
+    if (!token) {
+        return next(new AppError('You are not logged in. Please do', 401))
+    }
+
+    const testing = jwt.verify(token, process.env.JWT_SECRET)
+
+    // console.log(testing)
+
+    const loggedInUser = await User.findById(testing.id)
+    console.log(loggedInUser)
+
+    if (!loggedInUser) {
+        return next(new AppError("User doesn't exist", 401))
+    }
+
+    next()
+
 })
 
 
