@@ -16,7 +16,7 @@ app.use(express.json())
 app.use('/api/product', productRoute)
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
-// app.use('/api/order', orderRoute)
+app.use('/api/order', orderRoute)
 
 // catching error
 app.use(errorHandler)

@@ -17,24 +17,8 @@ const orderSchema = new mongoose.Schema({
     },
     orderItems: [
         {
-            name: { type: String, required: [true, 'Product name is required'] },
-            price: {
-                type: Number,
-                required: [true, 'Product price is required']
-            },
-            quantity: {
-                type: Number,
-                required: [true, 'Product quantity is required']
-            },
-            image: {
-                type: String,
-                required: [true, 'Product image is required']
-            },
-            product: {
-                type: mongoose.Schema.Types.objectId,
-                ref: 'Products',
-                required: true
-            }
+            type: mongoose.Schema.ObjectId,
+            ref: 'Product',
         }
     ],
     paymentMethod: {
@@ -42,11 +26,12 @@ const orderSchema = new mongoose.Schema({
         enum: {
             values: ['Card', 'Bank Transfer'],
             message: 'Payment method is needed'
-        }
+        },
+        default: "Card"
     },
     user: {
-        type: mongoose.Schema.Types.objectId,
-        ref: 'Users',
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
         required: true
     },
     paidAt: Date,
@@ -55,7 +40,7 @@ const orderSchema = new mongoose.Schema({
     },
     itemPrice: {
         type: Number,
-        required: true
+        // required: true
     },
     tax: {
         type: Number,
@@ -67,7 +52,7 @@ const orderSchema = new mongoose.Schema({
     },
     totalAmount: {
         type: Number,
-        required: true
+        // required: true
     },
     orderStatus: {
         type: String,
@@ -77,6 +62,23 @@ const orderSchema = new mongoose.Schema({
     },
     deliveredAt: Date
 })
+
+orderSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'orderItems',
+        select: 'name price quantity images'
+    })
+    next()
+})
+
+orderSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'user',
+        select: 'firstName lastName mobile'
+    })
+    next()
+})
+
 
 const Order = mongoose.model('Order', orderSchema)
 
