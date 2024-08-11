@@ -3,6 +3,7 @@ const AppError = require('../utils/AppError')
 const User = require('../Models/userModel')
 const jwt = require('jsonwebtoken')
 const sendEmail = require("../utils/sendmail")
+const crypto = require('crypto')
 
 // const signToken = id => {
 //     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
@@ -115,17 +116,64 @@ exports.isAuth = catchAsync(async (req, res, next) => {
     // console.log(testing)
 
     const loggedInUser = await User.findById(testing.id)
-    console.log(loggedInUser)
 
     if (!loggedInUser) {
         return next(new AppError("User doesn't exist", 401))
     }
 
+    req.user = loggedInUser
     next()
 
 })
 
 
-exports.resetPassword = catchAsync(async (req, res, next) => { })
+exports.resetPassword = catchAsync(async (req, res, next) => {
+    // 1) Get user based on the token
+    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
 
-exports.updatePassword = catchAsync(async (req, res, next) => { })
+    const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gt: Date.now() } })
+
+    // 2) If token has expired, and there is no user, set the new password
+
+    if (!user) {
+        return next(new AppError('Token is invalid or has expired', 400))
+    }
+
+    user.password = req.body.password
+
+    user.passwordConfirm = req.body.passwordConfirm
+
+    user.passwordResetToken = undefined
+    user.passwordResetExpires = undefined
+    await user.save()
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    res.status(200).json({
+        status: 'success',
+        token
+    })
+})
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('+password')
+    console.log(user)
+
+    if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+        return next(new AppError('Your current password is wrong', 401))
+    }
+
+    user.password = req.body.password
+    user.passwordConfirm = req.body.passwordConfirm
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+
+
+    await user.save();
+    res.status(200).json({
+        status: "success",
+        token,
+        data: {
+            user
+        }
+    })
+
+})
