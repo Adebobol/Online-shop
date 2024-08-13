@@ -75,12 +75,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
     const message = `Forget your password? Submit a PATCH request with your new password and passwordConfirm to: 
     ${resetURL}.\n If you didn't forget your passwword, please ignore this email`
-    // const message = `Missing your man? Send a video request with your top off to "08081237...".\n If you don't miss your man, please ignore this email`
+
 
     try {
         await sendEmail({
             email: user.email,
-            subject: "Password reset token",
+            subject: "Reset your password",
             message
         })
 

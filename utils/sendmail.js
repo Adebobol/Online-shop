@@ -49,7 +49,7 @@ const sendEmail = (options) => {
 
         from: "Online Shop",
         to: options.email,
-        subject: "Reset Your Password.",
+        subject: options.subject,
         text: options.message
     }
 
