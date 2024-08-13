@@ -38,18 +38,18 @@ const orderSchema = new mongoose.Schema({
     paymentInfo: {
         type: String
     },
-    itemPrice: {
-        type: Number,
-        // required: true
-    },
-    tax: {
-        type: Number,
-        required: true
-    },
-    shippingCharges: {
-        type: Number,
-        required: true
-    },
+    // itemPrice: {
+    //     type: Number,
+    //     // required: true
+    // },
+    // tax: {
+    //     type: Number,
+    //     required: true
+    // },
+    // shippingCharges: {
+    //     type: Number,
+    //     required: true
+    // },
     totalAmount: {
         type: Number,
         // required: true
@@ -74,7 +74,7 @@ orderSchema.pre(/^find/, function (next) {
 orderSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        select: 'firstName lastName mobile'
+        select: 'firstName lastName mobile email'
     })
     next()
 })
