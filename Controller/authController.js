@@ -77,10 +77,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     ${resetURL}.\n If you didn't forget your passwword, please ignore this email`
 
 
+
+
     try {
         await sendEmail({
             email: user.email,
-            subject: "Reset your password",
+            subject: "Naught Diares 1",
             message
         })
 
