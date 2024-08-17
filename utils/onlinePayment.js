@@ -1,26 +1,4 @@
-// const paystack = (request) => {
-//     const MySecretKey = process.env.PAYSTACK_SECRET_KEY
-
-
-//     const initializePayment = (form, mycallback) => {
-//         const options = {
-//             url: 'https://api.paystack.co/transaction/initialize',
-//             headers: {
-//                 authorization: MySecretKey,
-//                 'content-type': 'application/json',
-//                 'cache-control': 'no-cache'
-//             },
-//             form
-//         }
-
-//         const callback = (error, response, body) => {
-//             return mycallback(error, body)
-//         }
-//         request.post(options, callback)
-//     }
-// }
 const https = require('https')
-// const order = require('../Models/orderModel')
 class payStack {
 
     constructor(email, name, amount) {
@@ -32,9 +10,6 @@ class payStack {
     acceptPayment() {
 
         const params = JSON.stringify({
-            // "email": "customer@email.com",
-            // "amount": "20000"
-
             "email": this.email,
             "amount": this.amount
 
@@ -75,24 +50,3 @@ class payStack {
 
 const initializePayment = payStack
 module.exports = initializePayment
-
-
-//     const verifyPayment = (ref, mycallback) => {
-//         const options = {
-//             url: 'https://api.paystack.co/transaction/verify/' + encodeURIComponent(ref),
-//             headers: {
-//                 authorization: MySecretKey,
-//                 'content-type': 'application/json',
-//                 'cache-control': 'no-cache'
-//             },
-//         }
-//         const callback = (error, response, body) => {
-//             return mycallback(error, body)
-//         }
-//         request(options, callback)
-//     }
-
-//     return { initializePayment, verifyPayment }
-// }
-
-// module.exports = paystack

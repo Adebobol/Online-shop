@@ -17,6 +17,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
         mobile: req.body.mobile,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
+        individual: req.body.individual
     })
 
     const id = newUser._id
@@ -100,7 +101,14 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     }
 })
 
-
+exports.restrictTo = (...individuals) => {
+    return (req, res, next) => {
+        if (!individuals.includes(req.user.individual)) {
+            return next(new AppError("You don't have access to perform this actiom", 403))
+        }
+        next()
+    }
+}
 
 exports.isAuth = catchAsync(async (req, res, next) => {
     let token

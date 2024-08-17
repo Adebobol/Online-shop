@@ -15,11 +15,22 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'email is required']
+        required: [true, 'email is required'],
+        unique: true,
+        validate: [validator.isEmail, 'Provide a valid email']
     },
     mobile: {
         type: Number,
         required: [true, 'mobile number is required']
+    },
+    individual: {
+        type: String,
+        enum: {
+            values: ['buyer', 'admin', 'seller'],
+            message: "{VALUE} is not supported"
+        },
+        required: [true, 'individual is required']
+        // default: 'buyer'
     },
     password: {
         type: String,

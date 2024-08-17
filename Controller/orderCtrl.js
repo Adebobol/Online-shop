@@ -7,7 +7,7 @@ const Product = require('../Models/productModel')
 exports.createOrderItems = catchAsync(async (req, res, next) => {
     // get user id from IsAuth
     const user = req.user.id
-
+    console.log(user, req.user)
     // getting all parameters from body
     const { itemId, quantity, address, city, country } = req.body
     // finding our item by Id
@@ -66,7 +66,7 @@ exports.getOrderItems = catchAsync(async (req, res, next) => {
 
 exports.deleteOrderItem = catchAsync(async (req, res, next) => {
     const user = req.user.id
-    const itemId = req.query.item
+    const itemId = req.query.itemKey
 
     const orderDet = await Order.findOne({ user })
     if (orderDet) {
