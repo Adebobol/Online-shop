@@ -5,8 +5,11 @@ const Product = require('../Models/productModel')
 
 
 exports.createOrderItems = catchAsync(async (req, res, next) => {
+    // get user id from IsAuth
+    const user = req.user.id
+
     // getting all parameters from body
-    const { itemId, quantity, user, address, city, country } = req.body
+    const { itemId, quantity, address, city, country } = req.body
     // finding our item by Id
     const item = await Product.findById(itemId)
     // price of the item
@@ -49,7 +52,7 @@ exports.createOrderItems = catchAsync(async (req, res, next) => {
 
 exports.getOrderItems = catchAsync(async (req, res, next) => {
 
-    const { user } = req.body
+    const user = req.user.id
     const order = await Order.findOne({ user })
 
     if (!order) {
@@ -62,7 +65,7 @@ exports.getOrderItems = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteOrderItem = catchAsync(async (req, res, next) => {
-    const { user } = req.body
+    const user = req.user.id
     const itemId = req.query.item
 
     const orderDet = await Order.findOne({ user })

@@ -2,18 +2,6 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-// const orderItemSchema = new Schema({
-//     productId: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Product'
-//     },
-//     quantity: {
-//         type: Number,
-//         required: true
-//     }
-// })
-
-
 const orderSchema = new Schema({
     shippingInfo: {
         address: {
@@ -41,13 +29,6 @@ const orderSchema = new Schema({
         },
         price: Number
     }],
-    // orderItems: [{
-    //     itemId: {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Product'
-    //     }
-    // }
-    // ],
     paymentMethod: {
         type: String,
         enum: {
@@ -74,18 +55,11 @@ const orderSchema = new Schema({
     deliveredAt: Date
 })
 
-// orderSchema.pre(/^find/, function (next) {
-//     this.populate({
-//         path: 'orderItems',
-//         // select: 'price stock'
-//     })
-//     next()
-// })
 
 orderSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        // select: 'firstName lastName mobile email'
+        select: 'firstName lastName mobile email'
     })
     next()
 })
