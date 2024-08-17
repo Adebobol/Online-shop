@@ -3,14 +3,6 @@ const catchAsync = require('../utils/CatchAsync')
 const AppError = require('../utils/AppError')
 const Product = require('../Models/productModel')
 
-// const sumTotal = function (price, quantity, tax, shippingCharges) {
-//     initialTotal = price * quantity
-//     finalTotal = initialTotal + tax + shippingCharges
-
-//     return finalTotal
-// }
-
-
 
 exports.createOrderItems = catchAsync(async (req, res, next) => {
     // getting all parameters from body
@@ -70,9 +62,36 @@ exports.getOrderItems = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteOrderItem = catchAsync(async (req, res, next) => {
-    const q = req.query
-    console.log(q)
-    res.status(200).json({
-        status: "message"
-    })
+    const { user } = req.body
+    const itemId = req.query.item
+
+    const orderDet = await Order.findOne({ user })
+    if (orderDet) {
+        const getIndexOfItem = orderDet.orderItems.findIndex(ex => ex.itemId == itemId)
+        if (getIndexOfItem > -1) {
+            let item
+            item = orderDet.orderItems[getIndexOfItem]
+            orderDet.totalAmount -= item.price * item.quantity
+
+            if (orderDet.totalAmount < 0) {
+                orderDet.totalAmount = 0
+            }
+            orderDet.orderItems.splice(getIndexOfItem, 1)
+            orderDet.orderItems.reduce((acc, curr) => {
+                console.log(acc)
+                return acc + (curr.price * curr.quantity)
+            }, 0)
+            await orderDet.save()
+            res.status(200).json({
+                message: "success",
+                data: {
+                    orderDet
+                }
+            })
+        } else {
+            return next(new AppError('Item does not exit', 404))
+        }
+    } else {
+        return next(new AppError('No order created yet', 404))
+    }
 })
