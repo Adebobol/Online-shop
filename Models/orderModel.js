@@ -1,6 +1,20 @@
 const mongoose = require('mongoose')
 
-const orderSchema = new mongoose.Schema({
+const Schema = mongoose.Schema
+
+// const orderItemSchema = new Schema({
+//     productId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Product'
+//     },
+//     quantity: {
+//         type: Number,
+//         required: true
+//     }
+// })
+
+
+const orderSchema = new Schema({
     shippingInfo: {
         address: {
             type: String,
@@ -15,12 +29,25 @@ const orderSchema = new mongoose.Schema({
             required: [true, 'Country is required']
         }
     },
-    orderItems: [
-        {
+    orderItems: [{
+        itemId: {
             type: mongoose.Schema.ObjectId,
             ref: 'Product',
-        }
-    ],
+        },
+        quantity: {
+            type: Number,
+            min: 1,
+            default: 1
+        },
+        price: Number
+    }],
+    // orderItems: [{
+    //     itemId: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Product'
+    //     }
+    // }
+    // ],
     paymentMethod: {
         type: String,
         enum: {
@@ -30,51 +57,35 @@ const orderSchema = new mongoose.Schema({
         default: "Card"
     },
     user: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    paidAt: Date,
-    paymentInfo: {
-        type: String
-    },
-    // itemPrice: {
-    //     type: Number,
-    //     // required: true
-    // },
-    // tax: {
-    //     type: Number,
-    //     required: true
-    // },
-    // shippingCharges: {
-    //     type: Number,
-    //     required: true
-    // },
     totalAmount: {
         type: Number,
-        // required: true
     },
     orderStatus: {
         type: String,
         enum: {
             values: ['Processing', 'Shipped', 'Delivered']
-        }
+        },
+        default: "Processing"
     },
     deliveredAt: Date
 })
 
-orderSchema.pre(/^find/, function (next) {
-    this.populate({
-        path: 'orderItems',
-        select: 'name price quantity images'
-    })
-    next()
-})
+// orderSchema.pre(/^find/, function (next) {
+//     this.populate({
+//         path: 'orderItems',
+//         // select: 'price stock'
+//     })
+//     next()
+// })
 
 orderSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        select: 'firstName lastName mobile email'
+        // select: 'firstName lastName mobile email'
     })
     next()
 })

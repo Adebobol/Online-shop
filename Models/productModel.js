@@ -31,11 +31,6 @@ const productSchema = new mongoose.Schema({
         unique: true
     },
     images: [String],
-    color: {
-        type: String,
-        enum: ['Black', 'Yellow', 'White'],
-        default: "Black",
-    },
     ratings: [{
         type: String,
         postedBy: {

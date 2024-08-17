@@ -3,10 +3,10 @@ const express = require('express')
 
 const router = express.Router()
 
-const { createOrderItems, getAllOrderItems } = require('../Controller/orderCtrl')
+const { createOrderItems, getOrderItems, deleteOrderItem } = require('../Controller/orderCtrl')
 
 router.post('/', createOrderItems)
-router.get('/', getAllOrderItems)
-
+router.get('/:id', getOrderItems)
+router.delete('/', deleteOrderItem)
 
 module.exports = router
