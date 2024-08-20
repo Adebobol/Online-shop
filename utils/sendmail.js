@@ -3,35 +3,6 @@ const catchAsync = require("../utils/CatchAsync")
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
-// const sendEmail = catchAsync(async (options) => {
-
-//     // let testAccount = await nodemailer.createTestAccount()
-//     // Create a transporter object
-//     const transporter = nodemailer.createTransport({
-//         host: 'etheral.email',
-//         port: 587,
-//         // secure: false, // use SSL
-//         auth: {
-//             user: 'devon.ruecker@ethereal.email',
-//             pass: '9C3ff5Crfjfhx9mZbr',
-//         }
-//     });
-
-//     // Configure the mailoptions object
-//     const information = {
-//         from: 'Online Shop',
-//         to: options.email,
-//         subject: options.subject,
-//         text: options.message
-//     };
-
-//     // Send the email
-//     transporter.sendMail(information);
-
-// })
-
-// module.exports = sendEmail
-
 const sendEmail = (options) => {
     const transportEmail = nodemailer.createTransport({
         service: 'gmail',
@@ -61,8 +32,48 @@ const sendEmail = (options) => {
         }
     })
 
-    // console.log("sent email")
 }
 
 
 module.exports = sendEmail
+
+module.exports = class Email {
+    constructor(user, url) {
+        this.to = user.email
+        this.firstName = user.name.split(" ")[0]
+        this.url = url
+        this.from = `Adepoju Adebobola<${process.env.EMAIL_FROM}>`
+    }
+
+    createTransport() {
+        if (process.env.NODE_ENV === 'production') {
+            // Sendgrid
+            return 1
+        }
+        return createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'adepojuadebobola6@gmail.com',
+                pass: 'mzmfavgirpjancks'
+            }
+        })
+
+    }
+
+    send(template, subject) {
+        // 1) render html template
+
+        // 2) Define email options
+        const mailInformation = {
+            from: this.from,
+            to: this.to,
+            subject: options.subject,
+            text: options.message
+        }
+        // 3) Create transport and send email
+    }
+
+    sendWelcome() {
+        this.send('Welcome', 'welcome to Online Shop')
+    }
+}

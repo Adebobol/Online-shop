@@ -2,7 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 
-const { createUser, getAllUsers, getUser } = require("../Controller/userCtrl")
+const { createUser, getAllUsers, getUser, getMe, updateMe, deleteMe } = require("../Controller/userCtrl")
 
 const { signUp, login, forgetPassword, updatePassword, isAuth, resetPassword, restrictTo } = require('../Controller/authController')
 
@@ -14,9 +14,13 @@ router.patch('/resetPassword/:token', resetPassword)
 
 
 
+
 router.use(isAuth)
 
 router.patch('/updatePassword', updatePassword)
+router.get('/me', getMe, getUser)
+router.delete('/deleteMe', deleteMe)
+router.patch('/updateMe', updateMe)
 
 
 router.use(restrictTo('admin'))

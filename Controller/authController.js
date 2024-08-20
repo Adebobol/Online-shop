@@ -2,12 +2,35 @@ const catchAsync = require('../utils/CatchAsync')
 const AppError = require('../utils/AppError')
 const User = require('../Models/userModel')
 const jwt = require('jsonwebtoken')
+const { promisify } = require('util')
 const sendEmail = require("../utils/sendmail")
 const crypto = require('crypto')
 
-// const signToken = id => {
-//     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
-// }
+const signToken = id => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+}
+
+const sendToken = (user, statusCode, res) => {
+    const token = signToken(user._id)
+    const cookieOptions = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000),
+        httpOnly: true
+    }
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+    res.cookie('jwt', token, cookieOptions)
+
+    user.password = undefined
+    res.status(statusCode).json({
+        status: "success",
+        token,
+        data: {
+            user
+        }
+    })
+
+}
+
 
 exports.signUp = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
@@ -20,18 +43,20 @@ exports.signUp = catchAsync(async (req, res, next) => {
         individual: req.body.individual
     })
 
-    const id = newUser._id
-    const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    // const id = newUser._id
+    // const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    // token = signToken(id)
 
-    newUser.password = undefined
+    // newUser.password = undefined
 
-    res.status(201).json({
-        status: "success",
-        token,
-        data: {
-            newUser
-        }
-    })
+    // res.status(201).json({
+    //     status: "success",
+    //     token,
+    //     data: {
+    //         newUser
+    //     }
+    // })
+    sendToken(newUser, 201, res)
 
 })
 
@@ -48,7 +73,8 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('Incorrect email or password', 401))
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    token = signToken(user._id)
 
     res.status(200).json({
         status: "success",
@@ -121,9 +147,9 @@ exports.isAuth = catchAsync(async (req, res, next) => {
         return next(new AppError('You are not logged in. Please do', 401))
     }
 
-    const testing = jwt.verify(token, process.env.JWT_SECRET)
+    const testing = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
-    // console.log(testing)
+    console.log("testing:", testing)
 
     const loggedInUser = await User.findById(testing.id)
 
@@ -133,7 +159,6 @@ exports.isAuth = catchAsync(async (req, res, next) => {
 
     req.user = loggedInUser
     next()
-
 })
 
 
@@ -174,7 +199,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
     user.password = req.body.password
     user.passwordConfirm = req.body.passwordConfirm
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    token = signToken({ id: user._id })
 
 
     await user.save();
