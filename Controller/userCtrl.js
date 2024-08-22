@@ -100,12 +100,12 @@ exports.getMe = catchAsync(async (req, res, next) => {
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
 
-    // await User.findByIdAndDelete(req.user.id)
-    // res.status(200).json({
-    //     status: "success",
-    //     data: null
-    // })
-    console.log('iyutr')
+    await User.findByIdAndDelete(req.user.id)
+    res.status(200).json({
+        status: "success",
+        data: null
+    })
+
 })
 
 exports.updateMe = catchAsync(async (req, res, next) => {
