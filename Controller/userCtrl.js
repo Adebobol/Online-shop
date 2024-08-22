@@ -20,6 +20,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
         return next(new AppError('This requires an input.', 404))
     }
 
+    res.render('welcome')
     res.status(201).json({
         message: "success",
         data: {
