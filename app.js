@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.get('/', (req, res) => {
     res.render('welcome')
 })
-// app.use('/api/product', productRoute)
+app.use('/api/product', productRoute)
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/order', orderRoute)
@@ -38,4 +38,25 @@ app.use('/api/checkout', paymentRoute)
 
 // catching error
 app.use(errorHandler)
-module.exports = app
+// module.exports = app
+
+// const app = require('./app')
+const mongoose = require('mongoose')
+const dotenv = require("dotenv")
+
+
+dotenv.config({ path: '././.env' })
+
+
+// port def
+// const PORT = process.env.PORT
+
+const PORT = 4000
+
+// database connect
+mongoose.connect("mongodb://127.0.0.1/OnlineShop", {}).then(() => console.log('Database connected'))
+
+// app connect
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+})
