@@ -1,6 +1,6 @@
 
 
-FROM node:18
+FROM node:18.18.2
 
 # ENV NODE_ENV=production
 
@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD [ "nodemon", "app.js" ]
+CMD [ "nodemon", "server.js" ]
