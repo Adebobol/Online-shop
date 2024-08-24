@@ -4,7 +4,7 @@ FROM node:18
 
 # ENV NODE_ENV=production
 
-# WORKDIR /app
+WORKDIR /app
 
 COPY ["package.json", "package-lock.json*", "./"]
 
@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD [ "nodemon", "server.js" ]
+CMD [ "nodemon", "app.js" ]
