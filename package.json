@@ -2,7 +2,7 @@
   "name": "online-shop",
   "version": "1.0.0",
   "description": "A big E-coomerce web application built with node.js.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
