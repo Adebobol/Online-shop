@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer')
 const catchAsync = require("../utils/CatchAsync")
-const htmlToText = require('html-to-text')
+// const htmlToText = require('html-to-text')
+// const hbs = require('hbs')
+
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
@@ -38,50 +40,52 @@ const sendEmail = (options) => {
 
 module.exports = sendEmail
 
-module.exports = class Email {
-    constructor(user, url) {
-        this.to = user.email
-        this.firstName = user.name.split(" ")[0]
-        this.url = url
-        this.from = `Adepoju Adebobola<${process.env.EMAIL_FROM}>`
-    }
+// module.exports = class Email {
+//     constructor(user, url) {
+//         this.to = user.email
+//         this.firstName = user.firstName
+//         // .split(" ")[0]
+//         this.url = url
+//         this.from = `Adepoju Adebobola<${process.env.EMAIL_FROM}>`
+//     }
 
-    newTransport() {
-        if (process.env.NODE_ENV === 'production') {
-            // Sendgrid
-            return 1
-        }
-        return createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'adepojuadebobola6@gmail.com',
-                pass: 'mzmfavgirpjancks'
-            }
-        })
+//     newTransport() {
+//         if (process.env.NODE_ENV === 'production') {
+//             // Sendgrid
+//             return 1
+//         }
+//         return nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
+//                 user: 'adepojuadebobola6@gmail.com',
+//                 pass: 'mzmfavgirpjancks'
+//             }
+//         })
 
-    }
+//     }
 
-    async send(template, subject) {
-        // 1) render html template
-        const html = html.renderFile(`${__dirname}/../views/emails/${template}.html`, {
-            firstName: this.firstName,
-            url: this.url,
-            subject
-        })
-        // 2) Define email options
-        const mailInformation = {
-            from: this.from,
-            to: this.to,
-            subject,
-            html,
-            text: htmlToText.fromString(html),
-        }
-        // 3) Create transport and send email
+//     async send(template, subject) {
+//         // 1) render html template
+//         const html = hbs.compile(`${__dirname}/../views/email/${template}.hbs`)
+//         // , {
+//         //         firstName: this.firstName,
+//         //         url: this.url,
+//         //         subject
+//         //     })
 
-        await this.newTransport().sendWelcome(mailInformation)
-    }
+//         // 2) Define email options
+//         const mailInformation = {
+//             from: this.from,
+//             to: this.to,
+//             subject,
+//             html,
+//         }
+//         // 3) Create transport and send email
 
-    async sendWelcome() {
-        await this.send('Welcome', `${this.to} we kindly welcome you to Online Shop.`)
-    }
-}
+//         await this.newTransport().sendMail(mailInformation)
+//     }
+
+//     async sendWelcome() {
+//         await this.send('Welcome', `${this.to} We kindly welcome you to Online Shop.`)
+//     }
+// }
