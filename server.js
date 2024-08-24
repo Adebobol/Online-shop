@@ -7,7 +7,9 @@ dotenv.config({ path: '././.env' })
 
 
 // port def
-const PORT = process.env.PORT
+// const PORT = process.env.PORT
+
+const PORT = 4000
 
 // database connect
 mongoose.connect("mongodb://127.0.0.1/OnlineShop", {}).then(() => console.log('Database connected'))
