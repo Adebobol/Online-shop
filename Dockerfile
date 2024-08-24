@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 4000
 
 # Define the entry point for the container
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
