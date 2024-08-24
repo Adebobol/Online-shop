@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.get('/', (req, res) => {
     res.render('welcome')
 })
-app.use('/api/product', productRoute)
+// app.use('/api/product', productRoute)
 app.use('/api/user', userRoute)
 app.use('/api/category', categoryRoute)
 app.use('/api/order', orderRoute)
