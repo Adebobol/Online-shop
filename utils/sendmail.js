@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer')
 const catchAsync = require("../utils/CatchAsync")
-// const htmlToText = require('html-to-text')
-// const hbs = require('hbs')
+
 
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
@@ -11,7 +10,8 @@ const sendEmail = (options) => {
         service: 'gmail',
         auth: {
             user: 'adepojuadebobola6@gmail.com',
-            pass: 'mzmfavgirpjancks'
+            // pass: 'mzmfavgirpjancks'
+            pass: process.env.EMAIL_PASS
         }
     })
 

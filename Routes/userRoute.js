@@ -4,7 +4,7 @@ const router = express.Router()
 
 const { createUser, getAllUsers, getUser, getMe, updateMe, deleteMe } = require("../Controller/userCtrl")
 
-const { signUp, login, forgetPassword, updatePassword, isAuth, resetPassword, restrictTo } = require('../Controller/authController')
+const { signUp, login, forgetPassword, updatePassword, isAuth, lg, resetPassword, restrictTo } = require('../Controller/authController')
 
 
 router.post('/signUp', signUp)

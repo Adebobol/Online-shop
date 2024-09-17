@@ -43,25 +43,27 @@ exports.signUp = catchAsync(async (req, res, next) => {
         individual: req.body.individual
     })
 
-    // const url = `${req.protocol}://${req.get('host')}/me`
-    // console.log(url)
-    // new Email(newUser, url).sendWelcome()
-    // const id = newUser._id
-    // const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
-    // token = signToken(id)
+    const url = `${req.protocol}://${req.get('host')}/me`
+    console.log(url)
+    new Email(newUser, url).sendWelcome()
+    const id = newUser._id
+    const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    token = signToken(id)
 
-    // newUser.password = undefined
+    newUser.password = undefined
 
-    // res.status(201).json({
-    //     status: "success",
-    //     token,
-    //     data: {
-    //         newUser
-    //     }
-    // })
+    res.status(201).json({
+        status: "success",
+        token,
+        data: {
+            newUser
+        }
+    })
     sendToken(newUser, 201, res)
 
+
 })
+
 
 exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body
@@ -107,12 +109,10 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     ${resetURL}.\n If you didn't forget your passwword, please ignore this email`
 
 
-
-
     try {
         await sendEmail({
             email: user.email,
-            subject: "Naught Diares 1",
+            subject: "Sweet Notes",
             message
         })
 

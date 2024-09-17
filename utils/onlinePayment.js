@@ -22,7 +22,7 @@ class payStack {
             path: '/transaction/initialize',
             method: 'POST',
             headers: {
-                Authorization: 'Bearer sk_test_732c6d70fd65fd4c6c08f0cc46a50e3f6d243bcb',
+                Authorization: 'Bearer process.env.PUBLIC_KEY',
                 'Content-Type': 'application/json'
             }
         }
